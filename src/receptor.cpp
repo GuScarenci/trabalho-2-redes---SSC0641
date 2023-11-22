@@ -26,7 +26,7 @@ std::vector<int> CamadaEnlaceDadosReceptoraEnquadramento(std::vector<int> quadro
 }
 
 std::vector<int> CamadaEnlaceDadosReceptoraControleDeErro(std::vector<int> quadro){
-    int tipoDeControleDeErro = 0;
+    int tipoDeControleDeErro = 0; //mudar de acordo com o teste
 
     std::vector<int> controleErro;
 
@@ -50,6 +50,21 @@ std::vector<int> CamadaEnlaceDadosReceptoraControleDeErro(std::vector<int> quadr
 std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadePar(std::vector<int> quadro)
 {
     // implementacao do algoritimo
+	std::vector<int> recebimento_paridade_par;
+	bool paridade = true;
+
+	for (int i = 0; i < quadro.size() - 1; i++)
+		recebimento_paridade_par.push_back(quadro.at(i));
+
+	for (int i = 0; i < recebimento_paridade_par.size(); i++)
+		if (recebimento_paridade_par.at(i) == 1)
+			paridade = !paridade;
+
+	if (quadro.back() == paridade)
+		std::cout<<"\nRecebeu com sucesso\n"<<std::endl;
+
+	return recebimento_paridade_par;
+
 } // fim do metodo camadaEnlaceDadosTransmissoraControleDeErroBitParidadePar
 
 //TODO:
@@ -63,7 +78,46 @@ std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(std::vector<int> qu
 {
     // implementacao do algoritmo
     // usar polinomio CRC-32(IEEE 802)
-} // fim do metodo CamadaEnlaceDAdosTransmissoraControleDeErroCRC
+
+    std::cout<<"\n\nRealizando o controle de erro CRC receptor...\n\n"<<std::endl;
+	std::string polinomio_crc_32 = "100110000010001110110110111";
+    std::vector<int> mensagem, novo_quadro;
+    bool valido = true;
+
+    if (quadro.size() <= polinomio_crc_32.length())
+    {
+        std::cout<<"\n\nErro, o quadro possui menos bits que o polinômio\n\n"<<std::endl;
+        exit(1);
+    }
+
+    novo_quadro = quadro;
+    mensagem = quadro;
+    mensagem.erase(mensagem.end() - 31, mensagem.end());
+
+    for (int i = 0; i < mensagem.size(); i++)
+    {
+        if (quadro[i] == 1)
+        {
+            for (int j = 0; j < polinomio_crc_32.length(); j++)
+                novo_quadro[j + i] = novo_quadro[j + i] == polinomio_crc_32[j] ? 0 : 1;
+            /*  Compara o item i+j do novo quadro com o polinômio CRC 32 bits e armazena, no mesmo elemento,
+                    0 se forem iguais, e 1 caso sejam diferentes. */
+        }
+    }
+
+    for (int i = 0; i < mensagem.size(); i++)
+    {
+        if (novo_quadro[i] != 0)
+            valido = false;
+    }
+
+    if (valido){
+		for (int k : mensagem)
+			std::cout<<k<<std::endl;
+		std::cout<<"\n\n"<<std::endl;
+        return mensagem;
+	}
+} // fim do metodo CamadaEnlaceDadosTransmissoraControleDeErroCRC
 
 void CamadaDeAplicacaoReceptora(std::vector<int> quadro)
 {
