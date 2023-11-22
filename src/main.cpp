@@ -2,7 +2,9 @@
 #include <string> //TODO: ME REMOVA
 #include <vector> //TODO: ME REMOVA
 
-#include "../include/camadaEnlace.h"
+#include "../include/transmissor.h"
+
+#include "../include/receptor.h"//TODO: ME REMOVA
 
 //TODO: ME REMOVA!
 void teste(){
@@ -24,8 +26,8 @@ void teste(){
 
 int main(void)
 {   
-    teste();
-
-    //TODO:AplicacaoTransmissora();
+    //teste();
+    //TODO:
+    AplicacaoTransmissora();
 } // fim do metodo main
 
