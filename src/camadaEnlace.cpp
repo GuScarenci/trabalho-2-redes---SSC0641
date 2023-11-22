@@ -67,7 +67,7 @@ void CamadaEnlaceDadosTransmissora(std::vector<int> quadro)
 {
     std::vector<int> quadroCorrigido = CamadaEnlaceDadosTransmissoraControleDeErro(quadro);
     //TODO: CamadaEnlaceEnquadramento(???)
-    
+
     // chama proxima camada
     CamadaFisicaTransmissora(quadroCorrigido);
 
@@ -156,10 +156,11 @@ void CamadaFisicaReceptora(std::vector<int> quadro)
 void CamadaEnlaceDadosReceptora(std::vector<int> quadro)
 {
     //TODO:
-    // quadro = CamadaEnlaceDadosReceptoraControleDeErro(quadro); //PRECISA MESMO?
-    // quadro = CamadaEnlaceDadosReceptoraEnquadramento(quadro); //PRECISA MESMO?
+    std::vector<int> quadroCorrigido = CamadaEnlaceDadosReceptoraControleDeErro(quadro); //PRECISA MESMO?
+    //quadroCorrigido = CamadaEnlaceDadosReceptoraEnquadramento(quadroCorrigido); //PRECISA MESMO?
     CamadaDeAplicacaoReceptora(quadro);
 }
+//TODO: REPETIR TUDO O QUE FOI FEITO PARA A APLICAÇÃO TRANSMISSORA NA APLICAÇÃO RECEPTORA!
 
 void CamadaDeAplicacaoReceptora(std::vector<int> quadro)
 {
