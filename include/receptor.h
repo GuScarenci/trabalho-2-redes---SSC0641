@@ -10,6 +10,10 @@ void CamadaEnlaceDadosReceptora(std::vector<int> quadro);
 
 std::vector<int> CamadaEnlaceDadosReceptoraEnquadramento(std::vector<int> quadro);
 
+std::vector<int> CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(std::vector<int> quadro);
+
+std::vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(std::vector<int> quadro);
+
 std::vector<int> CamadaEnlaceDadosReceptoraControleDeErro(std::vector<int> quadro);
 
 std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadePar(std::vector<int> quadro);

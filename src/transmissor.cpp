@@ -77,7 +77,75 @@ void CamadaEnlaceDadosTransmissora(std::vector<int> quadro)
 
 //TODO: implementar enquadramento
 std::vector<int> CamadaEnlaceDadosTransmissoraEnquadramento(std::vector<int> quadro){
-    return quadro;
+    // escolhe o tipo de enquadramento
+	// 0 = Contagem de Caracters
+	// 1 = inserção de bytes
+	int enquadramento = 0;
+	std::vector<int> quadroEnquadrado;
+	// enquadra o fluxo de bits passado
+	switch (enquadramento){
+		case 0:
+
+			quadroEnquadrado = CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(quadro);
+
+			break;
+
+		case 1:
+
+			quadroEnquadrado = CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(quadro);
+
+			break;
+	}
+
+	return quadroEnquadrado;
+}
+
+std::vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(std::vector<int> quadro){
+
+    uint8_t qtd_bytes = ceil(quadro.size() / 8);
+    std::vector<int> quadroEnquadrado = quadro;
+    std::vector<int> binario;
+
+    std::bitset<8> bits(qtd_bytes);
+    for (int i = 0; i < 8; i++){
+        if (int(bits[i]) == 1)
+            quadroEnquadrado.insert(quadroEnquadrado.begin(), int(bits[i]));
+        else
+            quadroEnquadrado.insert(quadroEnquadrado.begin(), int(0));
+    }
+	return quadroEnquadrado;
+}
+
+std::vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(std::vector<int> quadro){	
+	std::string flag = "00001111";
+	std::string esc = "11110000";
+	std::string flag_bit = "01111110";
+	std::string byte_str = "", quadro_str = flag;
+
+    std::vector<int> quadroEnquadrado;
+    int counter = 1;
+
+    for (int i = 0; i < quadro.size(); i++){
+        byte_str += std::to_string(quadro[i]);
+
+        if (counter == (8)){
+            if ((byte_str == flag) || (byte_str == esc))
+                quadro_str += esc;
+
+            quadro_str += byte_str;
+
+            counter = 0;
+            byte_str = "";
+        }
+        counter++;
+    }
+
+    quadro_str += flag;
+
+    for (auto &i : quadro_str){
+        quadroEnquadrado.push_back(i - '0');
+	}
+    return quadroEnquadrado;
 }
 
 //TODO: implementar correção de erros
@@ -122,19 +190,20 @@ std::vector<int> CamadaEnlaceDadosTransmissoraControleDeErroBitParidadePar(std::
 	return controleParidadePar;
 } // fim do metodo camadaEnlaceDadosTransmissoraControleDeErroBitParidadePar
 
-//TODO:
+//TODO: IMPLEMENTAR!!!!
 std::vector<int> CamadaEnlaceDadosTransmissoraControleDeErroBitParidadeImpar(std::vector<int> quadro)
 {
     // implementacao do algoritimo
 } // fim do metodo CamadaEnlaceDadosTranmissoraControleErroBitParidadeImpar
 
-//TODO:
+//TODO:  FIXME: NÃO FUNCIONA
 std::vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCRC(std::vector<int> quadro)
 {
     // implementacao do algoritmo
     // usar polinomio CRC-32(IEEE 802)
+
     std::vector<int> novo_quadro = quadro;
-	std::string polinomio_crc_32 = "100110000010001110110110111";
+	std::string polinomio_crc_32 = "100000100110000010001110110110111";
 
     if (quadro.size() <= polinomio_crc_32.length()){
 		std::cout<<"\n\nErro, o quadro possui menos bits que o polinomio\n\n"<<std::endl;

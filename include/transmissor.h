@@ -14,6 +14,10 @@ void CamadaEnlaceDadosTransmissora(std::vector<int> quadro);
 
 std::vector<int> CamadaEnlaceDadosTransmissoraEnquadramento(std::vector<int> quadro);
 
+std::vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(std::vector<int> quadro);
+
+std::vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(std::vector<int> quadro);
+
 std::vector<int> CamadaEnlaceDadosTransmissoraControleDeErro(std::vector<int> quadro);
 
 std::vector<int> CamadaEnlaceDadosTransmissoraControleDeErroBitParidadePar(std::vector<int> quadro);

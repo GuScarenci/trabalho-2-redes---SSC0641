@@ -22,7 +22,74 @@ void CamadaEnlaceDadosReceptora(std::vector<int> quadro)
 //TODO: REPETIR TUDO O QUE FOI FEITO PARA A APLICAÇÃO TRANSMISSORA NA APLICAÇÃO RECEPTORA!
 
 std::vector<int> CamadaEnlaceDadosReceptoraEnquadramento(std::vector<int> quadro){
-    return quadro;
+	std::vector<int> quadro_desenquadrado;
+
+	// escolhe o tipo de enquadramento
+	// 0 = Contagem de Caracters
+	// 1 = inserção de bytes
+	int enquadramento = 0;
+
+	switch (enquadramento)
+	{
+	case 0: //contagem de caracteres
+		quadro_desenquadrado = CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(quadro);
+		break;
+	case 1: //insercao de bytes
+		quadro_desenquadrado = CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(quadro);
+		break;
+	default:
+		exit(1);
+		break;
+	}
+	return quadro_desenquadrado;
+}
+
+std::vector<int> CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(std::vector<int> quadro)
+{
+
+	std::vector<int> quadro_desenquadrado;
+
+	for (int i = 8; i < quadro.size(); i++)
+		quadro_desenquadrado.push_back(quadro[i]);
+
+	return quadro_desenquadrado;
+}
+
+std::vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(std::vector<int> quadro)
+{
+	std::string byte_str = "";
+	std::string quadro_str = "";
+	std::string flag = "00001111";
+	std::string esc = "11110000";
+
+	std::vector<int> novo_quadro;
+	int counter = 1;
+	bool ignore = false;
+
+	for (int i = 0; i < quadro.size(); i++)
+	{
+		byte_str += std::to_string(quadro[i]);
+
+		if (counter == 8)
+		{
+			if (((byte_str == flag) || (byte_str == esc)) && !ignore)
+				ignore = true;
+			else
+			{
+				quadro_str += byte_str;
+				ignore = false;
+			}
+
+			counter = 0;
+			byte_str = "";
+		}
+		counter++;
+    }
+    for (auto &i : quadro_str){
+		novo_quadro.push_back(i - '0');
+	}
+
+	return novo_quadro;
 }
 
 std::vector<int> CamadaEnlaceDadosReceptoraControleDeErro(std::vector<int> quadro){
@@ -67,20 +134,19 @@ std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadePar(std::vec
 
 } // fim do metodo camadaEnlaceDadosTransmissoraControleDeErroBitParidadePar
 
-//TODO:
+//TODO: IMPLEMENTAR!!!
 std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadeImpar(std::vector<int> quadro)
 {
     // implementacao do algoritimo
 } // fim do metodo CamadaEnlaceDadosTranmissoraControleErroBitParidadeImpar
 
-//TODO:
+//TODO: FIXME: NÃO FUNCIONA
 std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(std::vector<int> quadro)
 {
     // implementacao do algoritmo
     // usar polinomio CRC-32(IEEE 802)
-
     std::cout<<"\n\nRealizando o controle de erro CRC receptor...\n\n"<<std::endl;
-	std::string polinomio_crc_32 = "100110000010001110110110111";
+	std::string polinomio_crc_32 = "100000100110000010001110110110111";
     std::vector<int> mensagem, novo_quadro;
     bool valido = true;
 
@@ -117,7 +183,7 @@ std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(std::vector<int> qu
 		std::cout<<"\n\n"<<std::endl;
         return mensagem;
 	}
-} // fim do metodo CamadaEnlaceDadosTransmissoraControleDeErroCRC
+} // fim do metodo CamadaEnlaceDadosReceptoraControleDeErroCRC
 
 void CamadaDeAplicacaoReceptora(std::vector<int> quadro)
 {
