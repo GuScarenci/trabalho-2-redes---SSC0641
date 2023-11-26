@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include "../include/receptor.h"
+#include "../include/helper.h"
 
 void CamadaFisicaReceptora(std::vector<int> quadro)
 {
@@ -13,13 +14,10 @@ void CamadaFisicaReceptora(std::vector<int> quadro)
 
 void CamadaEnlaceDadosReceptora(std::vector<int> quadro)
 {
-    //TODO:
     std::vector<int> quadroEnquadrado = CamadaEnlaceDadosReceptoraEnquadramento(quadro);
-    std::vector<int> quadroCorrigido = CamadaEnlaceDadosReceptoraControleDeErro(quadroEnquadrado); //PRECISA MESMO?
-    
+    std::vector<int> quadroCorrigido = CamadaEnlaceDadosReceptoraControleDeErro(quadroEnquadrado);
     CamadaDeAplicacaoReceptora(quadroEnquadrado);
 }
-//TODO: REPETIR TUDO O QUE FOI FEITO PARA A APLICAÇÃO TRANSMISSORA NA APLICAÇÃO RECEPTORA!
 
 std::vector<int> CamadaEnlaceDadosReceptoraEnquadramento(std::vector<int> quadro){
 	std::vector<int> quadro_desenquadrado;
@@ -93,7 +91,7 @@ std::vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(std::vec
 }
 
 std::vector<int> CamadaEnlaceDadosReceptoraControleDeErro(std::vector<int> quadro){
-    int tipoDeControleDeErro = 0; //mudar de acordo com o teste
+    int tipoDeControleDeErro = 2; //mudar de acordo com o teste
 
     std::vector<int> controleErro;
 
@@ -113,7 +111,6 @@ std::vector<int> CamadaEnlaceDadosReceptoraControleDeErro(std::vector<int> quadr
     return controleErro;   
 }
 
-//TODO:
 std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadePar(std::vector<int> quadro)
 {
     // implementacao do algoritimo
@@ -132,29 +129,46 @@ std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadePar(std::vec
 
 	return recebimento_paridade_par;
 
-} // fim do metodo camadaEnlaceDadosTransmissoraControleDeErroBitParidadePar
+} // fim do metodo camadaEnlaceDadosReceptoraControleDeErroBitParidadePar
 
-//TODO: IMPLEMENTAR!!!
 std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadeImpar(std::vector<int> quadro)
 {
-    // implementacao do algoritimo
+    // Implementação do algoritmo para recepção com paridade ímpar
+    std::vector<int> recebimentoParidadeImpar;
+    bool paridade = false;  // Começa com falso para paridade ímpar
+
+    // Copia o quadro recebido, exceto o bit de paridade
+    for (int i = 0; i < quadro.size() - 1; i++)
+        recebimentoParidadeImpar.push_back(quadro.at(i));
+
+    // Calcula a paridade ímpar
+    for (int i = 0; i < recebimentoParidadeImpar.size(); i++)
+        if (recebimentoParidadeImpar.at(i) == 1)
+            paridade = !paridade;
+
+    // Verifica se o bit de paridade é válido
+    if (quadro.back() != paridade)  // Verifica se é diferente para paridade ímpar
+        std::cout << "\nErro de paridade detectado\n" << std::endl;
+    else
+        std::cout << "\nRecebeu com sucesso\n" << std::endl;
+
+    return recebimentoParidadeImpar;
 } // fim do metodo CamadaEnlaceDadosTranmissoraControleErroBitParidadeImpar
 
-//TODO: FIXME: NÃO FUNCIONA
 std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(std::vector<int> quadro)
 {
     // implementacao do algoritmo
     // usar polinomio CRC-32(IEEE 802)
     std::cout<<"\n\nRealizando o controle de erro CRC receptor...\n\n"<<std::endl;
-	std::string polinomio_crc_32 = "100000100110000010001110110110111";
+	std::string polinomio_crc_32 = "100110000010001110110110111";
     std::vector<int> mensagem, novo_quadro;
     bool valido = true;
 
-    if (quadro.size() <= polinomio_crc_32.length())
+    /*if (quadro.size() <= polinomio_crc_32.length())
     {
         std::cout<<"\n\nErro, o quadro possui menos bits que o polinômio\n\n"<<std::endl;
         exit(1);
-    }
+    }*/
 
     novo_quadro = quadro;
     mensagem = quadro;
@@ -162,7 +176,7 @@ std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(std::vector<int> qu
 
     for (int i = 0; i < mensagem.size(); i++)
     {
-        if (quadro[i] == 1)
+        if (novo_quadro[i] == 1)
         {
             for (int j = 0; j < polinomio_crc_32.length(); j++)
                 novo_quadro[j + i] = novo_quadro[j + i] == polinomio_crc_32[j] ? 0 : 1;
@@ -177,12 +191,21 @@ std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(std::vector<int> qu
             valido = false;
     }
 
-    if (valido){
+    if (!valido){
+        std::cout << "\n Erro! \n" << std::endl;
+    }else{
+        std::cout << "\nRecebeu com sucesso\n" << std::endl;
+    }
+    return mensagem;
+
+    //O QUE ESTAVA ANTES
+    /*if (valido){
 		for (int k : mensagem)
 			std::cout<<k<<std::endl;
 		std::cout<<"\n\n"<<std::endl;
         return mensagem;
-	}
+	}*/
+
 } // fim do metodo CamadaEnlaceDadosReceptoraControleDeErroCRC
 
 void CamadaDeAplicacaoReceptora(std::vector<int> quadro)
