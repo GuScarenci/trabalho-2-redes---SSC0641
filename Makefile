@@ -1,5 +1,7 @@
 CC=g++
-CFLAGS=-Iinclude
+
+run: trabalho2
+	./trabalho2
 
 trabalho2: main.o meio.o transmissor.o receptor.o helper.o
 	\$(CC) -o trabalho2 main.o meio.o transmissor.o receptor.o helper.o

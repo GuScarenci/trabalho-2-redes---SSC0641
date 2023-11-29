@@ -8,7 +8,7 @@
 #include "../include/meio.h"
 #include "../include/helper.h"
 
-
+/*Aplicação transmissora. Faz o input da mensagem em string a ser transmitida.*/
 void AplicacaoTransmissora(void)
 {
     printTag("Aplicação Transmissora: \n\n");
@@ -18,24 +18,23 @@ void AplicacaoTransmissora(void)
     getline(std::cin, mensagem);
     std::cout<<std::endl;
 
-    // Chama a proxima camada
-    CamadaDeAplicacaoTransmissora(mensagem); // em um exemplo mais realistico, aqui seria dado um SEND do SO(?)
+    CamadaDeAplicacaoTransmissora(mensagem); //Em um exemplo mais realistico, aqui seria dado um SEND
 
-} // fim do metodo aplicacaoTransmissora
+} // fim do metodo AplicacaoTransmissora
 
+/*Trata a string (mensagem) a ser transmitida.*/
 void CamadaDeAplicacaoTransmissora(std::string mensagem)
 {
     printTag("Camada de Aplicação Transmissora: \n\n");
 
-    std::vector<int> quadro = ConvertToBits(mensagem); // trabalhar com bits!!!
+    std::vector<int> quadro = ConvertToBits(mensagem);
 
     printQuadro(quadro);
 
-    // chama a proxima camada
     CamadaEnlaceDadosTransmissora(quadro);
-}
+}// fim do metodo CamadaAplicacaoTransmissora
 
-//TODO: entender um pouco mais  e implementar sem cópia
+/*Converte uma string passada (mensagem) em um vector de int's binários.*/
 std::vector<int> ConvertToBits(std::string mensagem)
 {
     int i = 0, j = 0;
@@ -46,9 +45,9 @@ std::vector<int> ConvertToBits(std::string mensagem)
         std::bitset<8> set(mensagem[i]);
         if (mensagem[i] == ' ')
         {
-            // um espaço vazio teve que virar um caso especial
-            set.reset();   // todos são zero
-            set.set(5, 1); // 32 == espaço
+            //Espaço é um caso especial
+            set.reset();   //Todos são zero
+            set.set(5, 1); //32 == espaço
         }
 
         for (j = 7; j >= 0; j--)
@@ -64,31 +63,29 @@ std::vector<int> ConvertToBits(std::string mensagem)
         }
     }
     return quadro;
-}
+}//fim do metodo ConvertToBits
 
-//TODO:
+/*Enquadra e insere detecção de erros*/
 void CamadaEnlaceDadosTransmissora(std::vector<int> quadro)
 {   
-    printTag("Camada de Enlace de Transmissora: \n\n");
+    printTag("Camada de Enlace Transmissora: \n\n");
     std::cout<<"Enquadra e insere correção de erros!"<<std::endl<<std::endl;
 
     std::vector<int> quadroEnquadrado = CamadaEnlaceDadosTransmissoraEnquadramento(quadro);
+    printQuadro(quadroEnquadrado);
     std::vector<int> quadroCorrigido = CamadaEnlaceDadosTransmissoraControleDeErro(quadroEnquadrado);
+    printQuadro(quadroCorrigido);
 
-    // chama proxima camada
     CamadaFisicaTransmissora(quadroCorrigido);
 
-} // fim do metodo camadaEnlaceDadosTransmissora
+} // fim do metodo CamadaEnlaceDadosTransmissora
 
-//TODO: implementar enquadramento
+/*Enquadra o fluxo de bits passado*/
 std::vector<int> CamadaEnlaceDadosTransmissoraEnquadramento(std::vector<int> quadro){
     printTag("Enquadramento ");
-    // escolhe o tipo de enquadramento
-	// 0 = Contagem de Caracters
-	// 1 = inserção de bytes
-	int enquadramento = 0;
+    // Escolhe o tipo de enquadramento, 0 = Contagem de Caracters, 1 = inserção de bytes
 	std::vector<int> quadroEnquadrado;
-	// enquadra o fluxo de bits passado
+
 	switch (enquadramento){
 		case 0:
 
@@ -106,6 +103,7 @@ std::vector<int> CamadaEnlaceDadosTransmissoraEnquadramento(std::vector<int> qua
 	return quadroEnquadrado;
 }
 
+/*Enquadra o fluxo de bits por contagem de caracteres*/
 std::vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(std::vector<int> quadro){
     printTag("por Contagem de Caracteres: \n\n");
     std::cout<<"Enquadrando..."<<std::endl<<std::endl;
@@ -124,6 +122,7 @@ std::vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoContagemDeCaracteres(
 	return quadroEnquadrado;
 }
 
+/*Enquadra o fluxo de bits por inserção de bytes*/
 std::vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(std::vector<int> quadro){
     printTag("por Inserção de bytes: \n\n");
     std::cout<<"Enquadrando..."<<std::endl<<std::endl;
@@ -159,12 +158,10 @@ std::vector<int> CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(std::
     return quadroEnquadrado;
 }
 
-//TODO: implementar correção de erros
+/*Insere a detecção de erros no fluxo de bits passado*/
 std::vector<int> CamadaEnlaceDadosTransmissoraControleDeErro(std::vector<int> quadro)
 {   
     printTag("Correção de Erros ");
-
-    int tipoDeControleDeErro = 2; // alterar de acordo com o teste
 
     std::vector<int> controleErro;
 
@@ -184,7 +181,7 @@ std::vector<int> CamadaEnlaceDadosTransmissoraControleDeErro(std::vector<int> qu
     return controleErro;
 } // fim dp metodo camadaEnlaceDadosTransmissoraControleDeErro
 
-//TODO:
+/*Insere detecção de erros por bit de paridade par*/
 std::vector<int> CamadaEnlaceDadosTransmissoraControleDeErroBitParidadePar(std::vector<int> quadro)
 {
     printTag("por bit de paridade par:\n\n");
@@ -206,7 +203,7 @@ std::vector<int> CamadaEnlaceDadosTransmissoraControleDeErroBitParidadePar(std::
 	return controleParidadePar;
 } // fim do metodo camadaEnlaceDadosTransmissoraControleDeErroBitParidadePar
 
-//TODO: IMPLEMENTAR!!!!
+/*Insere detecção de erros por bit de paridade impar*/
 std::vector<int> CamadaEnlaceDadosTransmissoraControleDeErroBitParidadeImpar(std::vector<int> quadro)
 {
     printTag("por bit de paridade impar:\n\n");
@@ -214,7 +211,7 @@ std::vector<int> CamadaEnlaceDadosTransmissoraControleDeErroBitParidadeImpar(std
 
     // Implementação do algoritmo para bit de paridade ímpar
     std::vector<int> controleParidadeImpar;
-    bool paridade = false;  // Começa com falso para paridade ímpar
+    bool paridade = true;
 
     // Copia o quadro original para o novo quadro com paridade
     for (int i = 0; i < quadro.size(); i++)
@@ -231,6 +228,7 @@ std::vector<int> CamadaEnlaceDadosTransmissoraControleDeErroBitParidadeImpar(std
     return controleParidadeImpar;
 } // fim do metodo CamadaEnlaceDadosTranmissoraControleErroBitParidadeImpar
 
+/*Insere detecção de erros por CRC IEEE-802*/
 std::vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCRC(std::vector<int> quadro)
 {
     printTag("por CRC: \n\n");
@@ -259,9 +257,10 @@ std::vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCRC(std::vector<int>
 
 } // fim do metodo CamadaEnlaceDAdosTransmissoraControleDeErroCRC
 
+/*Ultima camada da aplicação transmissora, envia o fluxo de bits para o meio de comunicação*/
 void CamadaFisicaTransmissora(std::vector<int> quadro)
 {   
-    printTag("Camada física transmissora: \n\n");
+    printTag("Camada Física Transmissora: \n\n");
 
     std::cout<<"Transmitindo..."<<std::endl<<std::endl;
 

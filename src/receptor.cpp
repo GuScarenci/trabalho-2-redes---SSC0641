@@ -7,25 +7,36 @@
 #include "../include/receptor.h"
 #include "../include/helper.h"
 
+/*Primeira camada da aplicação receptora que recebe o fluxo de bits*/
 void CamadaFisicaReceptora(std::vector<int> quadro)
 {
+    printTag("Camada Física Receptora: \n\n");
+
+    std::cout<<"Recebendo..."<<std::endl<<std::endl;
+
     CamadaEnlaceDadosReceptora(quadro);
 }
 
+/*Desenquadra e faz detecção de erros*/
 void CamadaEnlaceDadosReceptora(std::vector<int> quadro)
 {
-    std::vector<int> quadroEnquadrado = CamadaEnlaceDadosReceptoraEnquadramento(quadro);
-    std::vector<int> quadroCorrigido = CamadaEnlaceDadosReceptoraControleDeErro(quadroEnquadrado);
-    CamadaDeAplicacaoReceptora(quadroEnquadrado);
+    printTag("Camada de Enlace Receptora: \n\n");
+
+    std::cout<<"Desenquadra e corrige erros!"<<std::endl<<std::endl;
+
+    std::vector<int> quadroCorrigido = CamadaEnlaceDadosReceptoraControleDeErro(quadro);
+    std::vector<int> quadroDesenquadrado = CamadaEnlaceDadosReceptoraEnquadramento(quadroCorrigido);
+    CamadaDeAplicacaoReceptora(quadroCorrigido);
 }
 
+/*Desenquadra o fluxo de bits passado*/
 std::vector<int> CamadaEnlaceDadosReceptoraEnquadramento(std::vector<int> quadro){
+
+    printTag("Desenquadramento ");
+
 	std::vector<int> quadro_desenquadrado;
 
-	// escolhe o tipo de enquadramento
-	// 0 = Contagem de Caracters
-	// 1 = inserção de bytes
-	int enquadramento = 0;
+	//Escolhe o tipo de enquadramento, 0 = Contagem de Caracters, 1 = inserção de bytes
 
 	switch (enquadramento)
 	{
@@ -42,8 +53,12 @@ std::vector<int> CamadaEnlaceDadosReceptoraEnquadramento(std::vector<int> quadro
 	return quadro_desenquadrado;
 }
 
+/*Desenquadra o fluxo de bits por contagem de caracteres*/
 std::vector<int> CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(std::vector<int> quadro)
 {
+    printTag("por Contagem de Caracteres: \n\n");
+    std::cout<<"Enquadrando..."<<std::endl<<std::endl;
+
 
 	std::vector<int> quadro_desenquadrado;
 
@@ -53,8 +68,13 @@ std::vector<int> CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(std
 	return quadro_desenquadrado;
 }
 
+/*Desenquadra o fluxo de bits por inserção de bytes*/
 std::vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(std::vector<int> quadro)
 {
+    printTag("por Inserção de bytes: \n\n");
+    std::cout<<"Desenquadrando..."<<std::endl<<std::endl;
+
+
 	std::string byte_str = "";
 	std::string quadro_str = "";
 	std::string flag = "00001111";
@@ -90,8 +110,9 @@ std::vector<int> CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes(std::vec
 	return novo_quadro;
 }
 
+/*Detecção de erros no fluxo de bits passado*/
 std::vector<int> CamadaEnlaceDadosReceptoraControleDeErro(std::vector<int> quadro){
-    int tipoDeControleDeErro = 2; //mudar de acordo com o teste
+    printTag("Correção de Erros ");
 
     std::vector<int> controleErro;
 
@@ -111,8 +132,12 @@ std::vector<int> CamadaEnlaceDadosReceptoraControleDeErro(std::vector<int> quadr
     return controleErro;   
 }
 
+/*Detecção de erros por bit de paridade par*/
 std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadePar(std::vector<int> quadro)
-{
+{   
+    printTag("por bit de paridade par:\n\n");
+    std::cout<<"Corrigindo..."<<std::endl<<std::endl;
+
     // implementacao do algoritimo
 	std::vector<int> recebimento_paridade_par;
 	bool paridade = true;
@@ -124,15 +149,23 @@ std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadePar(std::vec
 		if (recebimento_paridade_par.at(i) == 1)
 			paridade = !paridade;
 
-	if (quadro.back() == paridade)
-		std::cout<<"\nRecebeu com sucesso\n"<<std::endl;
+	if (quadro.back() == paridade){
+		std::cout<<"\nRecebeu com sucesso!\n"<<std::endl;
+    }else{
+        std::cout<<"\nProblema na comunicação detectado!\n"<<std::endl;
+    }
+
 
 	return recebimento_paridade_par;
 
 } // fim do metodo camadaEnlaceDadosReceptoraControleDeErroBitParidadePar
 
+/*Detecção de erros por bit de paridade impar*/
 std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadeImpar(std::vector<int> quadro)
 {
+    printTag("por bit de paridade impar:\n\n");
+    std::cout<<"Corrigindo..."<<std::endl<<std::endl;
+
     // Implementação do algoritmo para recepção com paridade ímpar
     std::vector<int> recebimentoParidadeImpar;
     bool paridade = false;  // Começa com falso para paridade ímpar
@@ -148,27 +181,23 @@ std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroBitParidadeImpar(std::v
 
     // Verifica se o bit de paridade é válido
     if (quadro.back() != paridade)  // Verifica se é diferente para paridade ímpar
-        std::cout << "\nErro de paridade detectado\n" << std::endl;
+        std::cout << "\nErro de paridade detectado!\n" << std::endl;
     else
-        std::cout << "\nRecebeu com sucesso\n" << std::endl;
+        std::cout << "\nRecebeu com sucesso!\n" << std::endl;
 
     return recebimentoParidadeImpar;
 } // fim do metodo CamadaEnlaceDadosTranmissoraControleErroBitParidadeImpar
 
+/*Detecção de erros por CRC IEEE-802*/
 std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(std::vector<int> quadro)
 {
-    // implementacao do algoritmo
-    // usar polinomio CRC-32(IEEE 802)
-    std::cout<<"\n\nRealizando o controle de erro CRC receptor...\n\n"<<std::endl;
+    printTag("por CRC: \n\n");
+    std::cout<<"Inserindo correção..."<<std::endl<<std::endl;
+
+    // Implementacao do algoritmo usando polinomio CRC-32(IEEE 802)
 	std::string polinomio_crc_32 = "100110000010001110110110111";
     std::vector<int> mensagem, novo_quadro;
     bool valido = true;
-
-    /*if (quadro.size() <= polinomio_crc_32.length())
-    {
-        std::cout<<"\n\nErro, o quadro possui menos bits que o polinômio\n\n"<<std::endl;
-        exit(1);
-    }*/
 
     novo_quadro = quadro;
     mensagem = quadro;
@@ -192,12 +221,13 @@ std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(std::vector<int> qu
     }
 
     if (!valido){
-        std::cout << "\n Erro! \n" << std::endl;
+        std::cout << "\nErro! \n" << std::endl;
     }else{
-        std::cout << "\nRecebeu com sucesso\n" << std::endl;
+        std::cout << "\nRecebeu com sucesso!\n" << std::endl;
     }
     return mensagem;
 
+    //TODO:
     //O QUE ESTAVA ANTES
     /*if (valido){
 		for (int k : mensagem)
@@ -208,13 +238,19 @@ std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(std::vector<int> qu
 
 } // fim do metodo CamadaEnlaceDadosReceptoraControleDeErroCRC
 
+/*Trata o fluxo de bits recebido.*/
 void CamadaDeAplicacaoReceptora(std::vector<int> quadro)
 {
+    printTag("Camada de Aplicação Receptora: \n\n");
+
+    std::cout << "Transferindo fluxo de bits para mensagem legível...\n\n";
+
     std::string mensagem = DecodeToString(quadro); // estava trabalhando com bits
     // chama proxima camada
     AplicacaoReceptora(mensagem);
 } // fim do metodo camadaDeAplicacaoReceptora
 
+/*Converte um vector de int's binários passado em uma string.*/
 std::string DecodeToString(std::vector<int> quadro)
 {
     int i = 0, y = 0, j = 0;
@@ -239,9 +275,12 @@ std::string DecodeToString(std::vector<int> quadro)
     }
 
     return mensagem;
-}
+}// fim do metodo DecodeToString
 
+/*Recebe a mensagem tratada da camada de aplicação receptora e a imprime no console.*/
 void AplicacaoReceptora(std::string mensagem)
-{
+{   
+    printTag("Aplicação Receptora \n\n");
+
     std::cout << "A mensagem recebida foi:" << mensagem << std::endl;
 } // fim do metodo aplicacaoReceptora
