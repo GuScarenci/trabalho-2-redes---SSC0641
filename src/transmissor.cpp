@@ -187,7 +187,7 @@ std::vector<int> CamadaEnlaceDadosTransmissoraControleDeErroBitParidadePar(std::
     printTag("por bit de paridade par:\n\n");
     std::cout<<"Inserindo correção..."<<std::endl<<std::endl;
 
-    // implementacao do algoritmo
+    //Implementacao do algoritmo
 	std::vector<int> controleParidadePar;
 	bool paridade = true;
 
@@ -222,8 +222,8 @@ std::vector<int> CamadaEnlaceDadosTransmissoraControleDeErroBitParidadeImpar(std
         if (quadro.at(i) == 1)
             paridade = !paridade;
 
-    // Adiciona o bit de paridade (true para ímpar, false para par)
-    controleParidadeImpar.push_back(!paridade);  // Inverte para obter paridade ímpar
+    // Adiciona o bit de paridade
+    controleParidadeImpar.push_back(!paridade);
 
     return controleParidadeImpar;
 } // fim do metodo CamadaEnlaceDadosTranmissoraControleErroBitParidadeImpar
@@ -233,18 +233,17 @@ std::vector<int> CamadaEnlaceDadosTransmissoraControleDeErroCRC(std::vector<int>
 {
     printTag("por CRC: \n\n");
     std::cout<<"Inserindo correção..."<<std::endl<<std::endl;
-    // implementacao do algoritmo
-    // usar polinomio CRC-32(IEEE 802)
+    //Implementacao do algoritmo usando polinômio CRC-32(IEEE 802)
 
     std::vector<int> novo_quadro = quadro;
-	std::string polinomio_crc_32 = "100110000010001110110110111";
+    int polinomio_crc_32[27] = {1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1};
 
-    for (int i = 0; i < polinomio_crc_32.length(); i++)
+    for (int i = 0; i < /*polinomio_crc_32.length()*/ 31; i++)
         novo_quadro.push_back(0);
 
     for (int i = 0; i < quadro.size(); i++){
         if (novo_quadro[i] == 1){
-            for (int j = 0; j < polinomio_crc_32.length(); j++)
+            for (int j = 0; j < 27; j++)
                 novo_quadro[i + j] ^= (polinomio_crc_32[j]);
             // XOR entre o elemento i+j do novo quadro e o polinômio CRC 32bits; Armazena no próprio elemento i+j do novo quadro
         }

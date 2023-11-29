@@ -195,9 +195,10 @@ std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(std::vector<int> qu
     std::cout<<"Inserindo correção..."<<std::endl<<std::endl;
 
     // Implementacao do algoritmo usando polinomio CRC-32(IEEE 802)
-	std::string polinomio_crc_32 = "100110000010001110110110111";
-    std::vector<int> mensagem, novo_quadro;
     bool valido = true;
+
+    int polinomio_crc_32[27] = {1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1};
+    std::vector<int> mensagem, novo_quadro;
 
     novo_quadro = quadro;
     mensagem = quadro;
@@ -207,17 +208,19 @@ std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(std::vector<int> qu
     {
         if (novo_quadro[i] == 1)
         {
-            for (int j = 0; j < polinomio_crc_32.length(); j++)
+            for (int j = 0; j < 27; j++){
                 novo_quadro[j + i] = novo_quadro[j + i] == polinomio_crc_32[j] ? 0 : 1;
             /*  Compara o item i+j do novo quadro com o polinômio CRC 32 bits e armazena, no mesmo elemento,
                     0 se forem iguais, e 1 caso sejam diferentes. */
+            }
         }
     }
 
-    for (int i = 0; i < mensagem.size(); i++)
+    for (int i = 0; i < quadro.size(); i++)
     {
-        if (novo_quadro[i] != 0)
+        if (novo_quadro[i] != 0){
             valido = false;
+        }
     }
 
     if (!valido){
@@ -226,16 +229,6 @@ std::vector<int> CamadaEnlaceDadosReceptoraControleDeErroCRC(std::vector<int> qu
         std::cout << "\nRecebeu com sucesso!\n" << std::endl;
     }
     return mensagem;
-
-    //TODO:
-    //O QUE ESTAVA ANTES
-    /*if (valido){
-		for (int k : mensagem)
-			std::cout<<k<<std::endl;
-		std::cout<<"\n\n"<<std::endl;
-        return mensagem;
-	}*/
-
 } // fim do metodo CamadaEnlaceDadosReceptoraControleDeErroCRC
 
 /*Trata o fluxo de bits recebido.*/

@@ -1,4 +1,4 @@
-# Trabalho 2 Redes - SSC0641
+# Trabalho 2 Redes - SSC0641 - Simulação da Camada de Enlace
 
 ## Membros
 - Artur Brenner Weber - 12675451 - arturweber@usp.br
@@ -10,6 +10,10 @@
 - Matheus Henrique Dias Cirillo - 12547750 - matheuscirillo@usp.br
 
 - Pedro Oliveira Torrente - 11798853 - pedrotorrente@usp.br
+
+## Vídeo com demonstração
+
+[Clique aqui para ver no Youtube](https://youtu.be/TE9QQPKrJzo)
 
 ## O que foi utilizado para realizar o código?
 O código foi escrito em uma máquina com Windows 11 utilizando o WSL com o Ubuntu na versão 22.04.2 LTS, o compilador g++ na versão 11.4.0, e o GNU Make na versão 4.3.
@@ -25,23 +29,26 @@ O código foi escrito em uma máquina com Windows 11 utilizando o WSL com o Ubun
 ## Para rodar o código:
 O repositório conta com a pasta include onde estão os headers, a pasta src onde estão os códigos-fonte, além de um Makefile para facilitar a compilação e execução.
 
-Para rodar o código, clone o repositório, abra-o pelo terminal na pasta principal (a que contem as 2 pastas e o Makefile), execute os comandos
+Para rodar o código, clone o repositório, abra-o pelo terminal na pasta principal (a que contem as 2 pastas e o Makefile), execute os comandos:
+
 
 ``` make clean```
 
-Para limpar algum arquivo que possa estar já compilado e não atualizado.
-Opcional e recomendado.
+/\ (Opcional e recomendado) Para limpar algum arquivo que possa estar já compilado e não atualizado.
+
 
 ``` make trabalho2```
 
-Para compilar o código.
+/\ Para compilar o código.
+
 
 ``` make run ```
 
-Para rodar o código.
+/\ Para rodar o código.
+
 
 Ademais:
 
 ``` make ``` 
 
-Compila e roda o código.
+/\ Compila e roda o código.
