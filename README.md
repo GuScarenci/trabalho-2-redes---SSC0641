@@ -12,14 +12,12 @@
 - Pedro Oliveira Torrente - 11798853 - pedrotorrente@usp.br
 
 ## Vídeo com explicação geral do código
-Vídeo de duração média explicando conceitos e o código.
 
-[Clique aqui para ver no Youtube](https://youtu.be/VO_GexqevFA)
+[Clique aqui para ver no Youtube](https://youtu.be/VO_GexqevFA) => Vídeo de duração média explicando conceitos e o código.
 
 ## Vídeo com a execução dos casos do código
-Vídeo de curta duração mostrando a execução do código em diferentes casos.
 
-[Clique aqui para ver no Youtube](https://youtu.be/tHUKEi1VxDk)
+[Clique aqui para ver no Youtube](https://youtu.be/tHUKEi1VxDk) => Vídeo de curta duração mostrando a execução do código em diferentes casos.
 
 ## O que foi utilizado para realizar o código?
 O código foi escrito em uma máquina com Windows 11 utilizando o WSL com o Ubuntu na versão 22.04.2 LTS, o compilador g++ na versão 11.4.0, e o GNU Make na versão 4.3.
